@@ -265,12 +265,20 @@ namespace appbase {
                 if (example.empty())
                     // This is a boolean switch
                     out << name << " = " << "false\n";
-                } else {
-                    // The string is formatted "arg (=<interesting part>)"
-                    if (example.length() > 6) {
-                        example.erase(0, 6);
-                        if (!example.empty())
-                            example.pop_back();
+                else {
+                    // The string is typically formatted "arg (=<value>)".
+                    // Use markers to extract the inner value robustly instead
+                    // of hardcoded offsets which crash with std::out_of_range
+                    // if boost returns an unexpected format.
+                    auto open_pos = example.find("(=");
+                    if (open_pos != std::string::npos) {
+                        auto value_start = open_pos + 2;  // skip "(="
+                        auto value_end = example.rfind(')');
+                        if (value_end != std::string::npos && value_end > value_start) {
+                            example = example.substr(value_start, value_end - value_start);
+                        } else {
+                            example = example.substr(value_start);
+                        }
                     }
                     out << name << " = " << example << "\n";
                 }
