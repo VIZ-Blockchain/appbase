@@ -265,10 +265,13 @@ namespace appbase {
                 if (example.empty())
                     // This is a boolean switch
                     out << name << " = " << "false\n";
-                else {
+                } else {
                     // The string is formatted "arg (=<interesting part>)"
-                    example.erase(0, 6);
-                    example.erase(example.length()-1);
+                    if (example.length() > 6) {
+                        example.erase(0, 6);
+                        if (!example.empty())
+                            example.pop_back();
+                    }
                     out << name << " = " << example << "\n";
                 }
             }
