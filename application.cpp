@@ -185,6 +185,10 @@ namespace appbase {
             std::cerr << "Error parsing command line: " << e.what() << "\n";
             return false;
         }
+        catch (const std::exception& e) {
+            std::cerr << "Unexpected error during initialization: " << e.what() << "\n";
+            return false;
+        }
     }
 
     void application::shutdown() {
