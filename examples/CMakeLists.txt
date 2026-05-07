@@ -1,2 +1,10 @@
 add_executable( appbase_example main.cpp )
-target_link_libraries( appbase_example appbase ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} )
+target_link_libraries( appbase_example appbase ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} ${Boost_LIBRARIES} )
+
+# On Windows, ensure boost_exception is linked (auto-link may not find it)
+if(WIN32)
+    find_library(BOOST_EXCEPTION_LIB NAMES libboost_exception-vc142-mt-x64-1_84 libboost_exception-vc142-mt-x64 PATHS ${Boost_LIBRARY_DIRS} NO_DEFAULT_PATH)
+    if(BOOST_EXCEPTION_LIB)
+        target_link_libraries(appbase_example ${BOOST_EXCEPTION_LIB})
+    endif()
+endif()

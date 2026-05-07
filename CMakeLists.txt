@@ -16,7 +16,8 @@ LIST(APPEND BOOST_COMPONENTS thread
                              chrono
                              program_options
                              unit_test_framework
-                             locale)
+                             locale
+                             exception)
 
 FIND_PACKAGE(Boost 1.71 REQUIRED COMPONENTS ${BOOST_COMPONENTS})
 set( Boost_USE_STATIC_LIBS ON CACHE STRING "ON or OFF" )
