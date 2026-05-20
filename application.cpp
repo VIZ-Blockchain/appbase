@@ -112,7 +112,7 @@ namespace appbase {
        app_cli_opts.add_options()
                 ("help,h", "Print this help message and exit.")
                 ("version,v", "Print version information.")
-                ("data-dir,d", bpo::value<bfs::path>()->default_value( "witness_node_data_dir" ), "Directory containing configuration file config.ini")
+                ("data-dir,d", bpo::value<bfs::path>()->default_value( "node_data_dir" ), "Directory containing configuration file config.ini")
                 ("config,c", bpo::value<bfs::path>()->default_value( "config.ini" ), "Configuration file name relative to data-dir");
 
         my->_cli_options.add(app_cli_opts);
