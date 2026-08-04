@@ -19,19 +19,16 @@ namespace appbase {
     class impl {
     public:
         impl():_cli_options("Application Options"){
-            io_serv.reset(new asio::io_service());
+            io_serv.reset(new asio::io_context());
         }
 
         std::vector<tcp::endpoint> resolve( const std::string& host, uint16_t port ) { try {
             tcp::resolver res( *io_serv );
 
-            tcp::resolver::iterator it = res.resolve( tcp::resolver::query(host, std::to_string(uint64_t(port))) );
-            tcp::resolver::iterator et;
-
             std::vector<tcp::endpoint> eps;
-            for (; et != it; ++it) {
-                if (it->endpoint().address().is_v4()) {
-                    eps.push_back( it->endpoint() );
+            for( const auto& entry : res.resolve( host, std::to_string(uint64_t(port)) ) ) {
+                if (entry.endpoint().address().is_v4()) {
+                    eps.push_back( entry.endpoint() );
                 }
             }
             return eps;
@@ -43,7 +40,7 @@ namespace appbase {
         map< string, std::shared_ptr< abstract_plugin > >  plugins; ///< all registered plugins
         vector< abstract_plugin* >                         initialized_plugins; ///< stored in the order they were started running
         vector< abstract_plugin* >                         running_plugins; ///< stored in the order they were started running
-        std::unique_ptr< asio::io_service >                io_serv;
+        std::unique_ptr< asio::io_context >                io_serv;
         std::string                                        version_info;
 
         const variables_map*                               _options = nullptr;
@@ -60,7 +57,7 @@ namespace appbase {
         return my->thread_pool;
     }
 
-    boost::asio::io_service& application::get_io_service() {
+    boost::asio::io_context& application::get_io_service() {
         return *my->io_serv;
     }
 

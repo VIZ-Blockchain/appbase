@@ -85,7 +85,7 @@ namespace appbase {
 
         void set_version_string( const string& version );
 
-        boost::asio::io_service& get_io_service();
+        boost::asio::io_context& get_io_service();
 
         std::vector<boost::asio::ip::tcp::endpoint> resolve_string_to_ip_endpoints(const std::string &);
 
