@@ -11,14 +11,22 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
 SET(BOOST_COMPONENTS)
 LIST(APPEND BOOST_COMPONENTS thread
                              date_time
-                             system
                              filesystem
                              chrono
                              program_options
                              unit_test_framework
                              locale)
 
-FIND_PACKAGE(Boost 1.71 REQUIRED COMPONENTS ${BOOST_COMPONENTS})
+# Boost.System has been header-only since 1.69. Boost 1.90 stopped shipping a
+# compiled library for it, and with it the boost_system CMake config, so naming
+# system in COMPONENTS hard-fails there -- while Boost 1.83 still ships and
+# wants it. Probe for the component instead of assuming either way.
+find_package(boost_system QUIET CONFIG)
+if(boost_system_FOUND)
+    list(APPEND BOOST_COMPONENTS system)
+endif()
+
+FIND_PACKAGE(Boost 1.71 CONFIG REQUIRED COMPONENTS ${BOOST_COMPONENTS})
 set( Boost_USE_STATIC_LIBS ON CACHE STRING "ON or OFF" )
 
 if( APPLE )
